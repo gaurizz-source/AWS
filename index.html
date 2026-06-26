@@ -3,53 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 Event RSVP Platform</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Campus Events Platform</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #111827;
+            --text-muted: #4b5563;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+        }
+
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .event-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .event-title { font-size: 1.3rem; margin-bottom: 10px; color: var(--text); }
+        .event-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .btn:hover { background-color: var(--primary-hover); }
+
+        /* Modal Settings */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+
+        .event-stats { margin: 15px 0; font-weight: bold; color: var(--primary); }
+        .attendees-section { margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; }
+        .attendees-section ul { list-style: none; margin-top: 10px; max-height: 150px; overflow-y: auto; }
+        .attendees-section li { padding: 6px 0; border-bottom: 1px solid #fafafa; font-size: 0.9rem; }
+        .error { color: #dc2626; font-weight: 500; text-align: center; width: 100%; }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1>🎉 Campus Event RSVP Portal</h1>
-        <p>Discover exciting campus events and secure your spot!</p>
+        <h1>Campus Events Platform</h1>
+        <p>Discover tech hackathons, culture festivals, and manage registrations live</p>
     </header>
 
-    <main class="container">
-        <section id="events-grid" class="events-grid">
-            <div class="loading">Loading upcoming events...</div>
-        </section>
-    </main>
+    <div class="container">
+        <div class="events-grid" id="events-grid">
+            <div style="text-align: center; width: 100%; color: var(--text-muted);">Loading active platform sessions...</div>
+        </div>
+    </div>
 
-    <div id="rsvp-modal" class="modal">
+    <div class="modal" id="event-modal">
         <div class="modal-content">
-            <span class="close-btn" id="close-modal">&times;</span>
-            <h2 id="modal-event-title">RSVP for Event</h2>
+            <span class="close-btn" onclick="eventModal.close()">&times;</span>
+            <h2 id="modal-title">Event Registration</h2>
             
-            <div class="event-stats">
-                <span id="stat-going">🔥 0 Going</span>
-            </div>
+            <div class="event-stats" id="modal-stats">Loading registration metrics...</div>
 
             <form id="rsvp-form">
                 <input type="hidden" id="modal-event-id">
                 <div class="form-group">
-                    <label for="attendee-name">Your Full Name:</label>
-                    <input type="text" id="attendee-name" required placeholder="Enter your name">
+                    <label for="rsvp-name">Full Name</label>
+                    <input type="text" id="rsvp-name" required placeholder="Your full name">
                 </div>
                 <div class="form-group">
-                    <label for="attendee-email">Email Address:</label>
-                    <input type="email" id="attendee-email" required placeholder="student@igdtuw.ac.in">
+                    <label for="rsvp-email">Campus Email</label>
+                    <input type="email" id="rsvp-email" required placeholder="username@campus.edu">
                 </div>
-                <button type="submit" class="btn btn-submit">Confirm My RSVP ✨</button>
+                <button type="submit" class="btn">Confirm RSVP Spot</button>
             </form>
 
             <div class="attendees-section">
-                <h3>Who's Going:</h3>
-                <ul id="attendees-list">
-                    </ul>
+                <h3>Registered Attendees</h3>
+                <ul id="modal-attendees-list">
+                    <li>No active registrations yet.</li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <script src="utils.js"></script>
-    <script src="events.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // Global Endpoint Base Reference pointing to your active AWS Function URL
+        const API_BASE_URL = 'https://ewiqs2knjjgvxpbyamzpazx43q0ecjof.lambda-url.ap-southeast-2.on.aws';
+
+        // Native API Client Wrapper implementation
+        const apiHelper = {
+            async get(endpoint) {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`);
+                if (!response.ok) throw new Error(`Fetch execution failed for: ${endpoint}`);
+                return await response.json();
+            },
+            async post(endpoint, data) {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error(`Post action rejected for: ${endpoint}`);
+                return await response.json();
+            }
+        };
+
+        // Window Event Overlays manager interface implementation
+        const eventModal = {
+            element: document.getElementById('event-modal'),
+            async open(eventId) {
+                document.getElementById('modal-event-id').value = eventId;
+                this.element.style.display = 'flex';
+                
+                // Clear state indicators out
+                document.getElementById('modal-stats').innerText = 'Fetching current registration count...';
+                document.getElementById('modal-attendees-list').innerHTML = '<li>Loading registry...</li>';
+
+                try {
+                    // Pull real-time details from backend endpoint dependencies
+                    const [eventData, statsData, attendeesData] = await Promise.all([
+                        apiHelper.get(`/event/${eventId}`),
+                        apiHelper.get(`/stats/${eventId}`),
+                        apiHelper.get(`/attendees/${eventId}`)
+                    ]);
+
+                    // Set header focus text
+                    document.getElementById('modal-title').innerText = eventData.title || 'Register for Event';
+                    
+                    // Render totals field metrics counter
+                    document.getElementById('modal-stats').innerText = `🔥 Total registrations: ${statsData.count || 0}`;
+
+                    // Populate attendees list item array strings
+                    const attendeesList = document.getElementById('modal-attendees-list');
+                    attendeesList.innerHTML = '';
+                    if (attendeesData && attendeesData.length > 0) {
+                        attendeesData.forEach(name => {
+                            const li = document.createElement('li');
+                            li.innerText = `✔️ ${name}`;
+                            attendeesList.appendChild(li);
+                        });
+                    } else {
+                        attendeesList.innerHTML = '<li>Be the first to secure a spot for this session!</li>';
+                    }
+
+                } catch (err) {
+                    console.error("Modal compilation fault:", err);
+                    document.getElementById('modal-stats').innerText = 'Error loading metadata indicators.';
+                }
+            },
+            close() {
+                this.element.style.display = 'none';
+                document.getElementById('rsvp-form').reset();
+            }
+        };
+
+        // Initialize runtime platform bindings on load lifecycle point
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('events-grid');
+            try {
+                const events = await apiHelper.get('/events');
+                grid.innerHTML = ''; // Wipe out loading message indicators cleanly
+
+                events.forEach(event => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.innerHTML = `
+                        <div class="event-content">
+                            <h3 class="event-title">${event.title}</h3>
+                            <p class="event-desc">${event.description}</p>
+                            <button class="btn" onclick="eventModal.open('${event.id}')">View Details & RSVP</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                console.error("Layout assignment crash:", err);
+                grid.innerHTML = `<div class="error">Failed to load platform events. Please verify backend configurations.</div>`;
+            }
+        });
+
+        // Setup RSVP Form submission logic router
+        document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('modal-event-id').value;
+            const namePayload = document.getElementById('rsvp-name').value;
+            const emailPayload = document.getElementById('rsvp-email').value;
+
+            try {
+                await apiHelper.post('/rsvp', {
+                    eventId: parseInt(id),
+                    name: namePayload,
+                    email: emailPayload
+                });
+                
+                alert('🎉 Your spot is confirmed! See you at the session.');
+                eventModal.close();
+            } catch (err) {
+                alert('Submission failure. Please try again.');
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
