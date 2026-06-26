@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Event RSVP Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🎉 Campus Event RSVP Portal</h1>
+        <p>Discover exciting campus events and secure your spot!</p>
+    </header>
+
+    <main class="container">
+        <section id="events-grid" class="events-grid">
+            <div class="loading">Loading upcoming events...</div>
+        </section>
+    </main>
+
+    <div id="rsvp-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="modal-event-title">RSVP for Event</h2>
+            
+            <div class="event-stats">
+                <span id="stat-going">🔥 0 Going</span>
+            </div>
+
+            <form id="rsvp-form">
+                <input type="hidden" id="modal-event-id">
+                <div class="form-group">
+                    <label for="attendee-name">Your Full Name:</label>
+                    <input type="text" id="attendee-name" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="attendee-email">Email Address:</label>
+                    <input type="email" id="attendee-email" required placeholder="student@igdtuw.ac.in">
+                </div>
+                <button type="submit" class="btn btn-submit">Confirm My RSVP ✨</button>
+            </form>
+
+            <div class="attendees-section">
+                <h3>Who's Going:</h3>
+                <ul id="attendees-list">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="events.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
