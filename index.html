@@ -1,291 +1,519 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Events Platform</title>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --background: #f9fafb;
-            --card-bg: #ffffff;
-            --text: #111827;
-            --text-muted: #4b5563;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IGDTUW Opportunity & Event Tracking Platform</title>
+  
+  <!-- Inter & JetBrains Mono Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--background);
-            color: var(--text);
-            padding-bottom: 60px;
-        }
-
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-        }
-
-        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .events-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .event-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .event-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .event-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .event-title { font-size: 1.3rem; margin-bottom: 10px; color: var(--text); }
-        .event-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            margin-top: auto;
-        }
-
-        .btn:hover { background-color: var(--primary-hover); }
-
-        /* Modal Settings */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
-
-        .event-stats { margin: 15px 0; font-weight: bold; color: var(--primary); }
-        .attendees-section { margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; }
-        .attendees-section ul { list-style: none; margin-top: 10px; max-height: 150px; overflow-y: auto; }
-        .attendees-section li { padding: 6px 0; border-bottom: 1px solid #fafafa; font-size: 0.9rem; }
-        .error { color: #dc2626; font-weight: 500; text-align: center; width: 100%; }
-    </style>
+  <!-- Modular Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/index.css">
 </head>
 <body>
 
-    <header>
-        <h1>Campus Events Platform</h1>
-        <p>Discover tech hackathons, culture festivals, and manage registrations live</p>
-    </header>
-
-    <div class="container">
-        <div class="events-grid" id="events-grid">
-            <div style="text-align: center; width: 100%; color: var(--text-muted);">Loading active platform sessions...</div>
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="navbar">
+      <a href="#" class="logo-container" onclick="switchView('student-dashboard'); return false;" id="nav-logo">
+        <div class="logo-icon">I</div>
+        <div class="logo-text">
+          <span class="logo-title">IGDTUW Opps</span>
+          <span class="logo-subtitle">Opportunity Platform</span>
         </div>
+      </a>
+      
+      <nav class="nav-links">
+        <button class="nav-btn active" id="btn-nav-student" onclick="switchView('student-dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+          Student Dashboard
+        </button>
+        <button class="nav-btn" id="btn-nav-host" onclick="switchView('host-dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-round"><path d="M18 21a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><path d="M12 2a14.5 14.5 0 0 0 0 16"/></svg>
+          Society Portal
+        </button>
+        
+        <!-- Auth Button / Profile Indicator -->
+        <div id="nav-auth-section">
+          <button class="nav-btn auth-btn" onclick="switchView('auth-page')" id="nav-auth-trigger">Sign In / Sign Up</button>
+        </div>
+      </nav>
     </div>
+  </header>
 
-    <div class="modal" id="event-modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="eventModal.close()">&times;</span>
-            <h2 id="modal-title">Event Registration</h2>
-            
-            <div class="event-stats" id="modal-stats">Loading registration metrics...</div>
+  <!-- Notification Toast Area -->
+  <div class="toast-container" id="toast-root"></div>
 
-            <form id="rsvp-form">
-                <input type="hidden" id="modal-event-id">
-                <div class="form-group">
-                    <label for="rsvp-name">Full Name</label>
-                    <input type="text" id="rsvp-name" required placeholder="Your full name">
-                </div>
-                <div class="form-group">
-                    <label for="rsvp-email">Campus Email</label>
-                    <input type="email" id="rsvp-email" required placeholder="username@campus.edu">
-                </div>
-                <button type="submit" class="btn">Confirm RSVP Spot</button>
-            </form>
+  <!-- Main Application Canvas -->
+  <main>
 
-            <div class="attendees-section">
-                <h3>Registered Attendees</h3>
-                <ul id="modal-attendees-list">
-                    <li>No active registrations yet.</li>
-                </ul>
+    <!-- 1. STUDENT / PUBLIC VIEW -->
+    <div id="view-student-dashboard" class="view-container active">
+      
+      <!-- Interactive Campus Hero Section -->
+      <div class="hero-banner" id="student-hero">
+        <div>
+          <div class="hero-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16"/><path d="M5 10h14"/><path d="m15 4 5 5-5 5"/><path d="m9 20-5-5 5-5"/></svg>
+            IGDTUW Official Student Hub
+          </div>
+          <h1 class="hero-title">Discover and Excel in Campus <span>Opportunities</span></h1>
+          <p class="hero-desc">Access premier hackathons, cultural events, coding trials, and creative contests curated specifically by IGDTUW's leading societies like ACM, IEEE, Lean In, and Hypnotics.</p>
+          
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <span class="hero-stat-value" id="stat-total-opps">12+</span>
+              <span class="hero-stat-label">Live Opportunities</span>
             </div>
+            <div class="hero-stat-item" style="border-left: 1px solid var(--border-color); padding-left: 1.5rem;">
+              <span class="hero-stat-value" id="stat-active-registrations">1.8k+</span>
+              <span class="hero-stat-label">Total Registrations</span>
+            </div>
+          </div>
         </div>
+        
+        <div class="hero-illustration">
+          <div class="illustration-row">
+            <div class="illustration-number">1</div>
+            <div class="illustration-text">Sign Up with graduation profile</div>
+          </div>
+          <div class="illustration-row" style="transform: translateX(10px);">
+            <div class="illustration-number" style="background-color: var(--secondary);">2</div>
+            <div class="illustration-text">Check restrictive eligibility</div>
+          </div>
+          <div class="illustration-row" style="transform: translateX(20px);">
+            <div class="illustration-number">3</div>
+            <div class="illustration-text">One-click RSVP with instant logs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-layout">
+        <!-- Main opportunities area -->
+        <div class="student-main-content">
+          
+          <!-- Top Trending section -->
+          <div class="trending-section">
+            <div class="section-header">
+              <h2 class="section-title">Trending Opportunities</h2>
+              <p class="section-subtitle">Highly sought after events with rapid registrations active right now</p>
+            </div>
+            <div class="trending-grid" id="trending-grid-root">
+              <!-- Instantiated via JavaScript -->
+            </div>
+          </div>
+
+          <!-- All Opportunities Section -->
+          <div class="opportunities-section">
+            <div class="section-header">
+              <h2 class="section-title">All Opportunities</h2>
+              <p class="section-subtitle">Browse all upcoming and ongoing events hosted on campus</p>
+            </div>
+            <div class="opportunities-grid" id="opportunities-grid-root">
+              <!-- Instantiated via JavaScript -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar showing RSVPs -->
+        <div class="student-sidebar">
+          <div class="student-rsvp-sidebar">
+            <div class="rsvp-header">
+              <h3 class="rsvp-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-check"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16l7-4Z"/><path d="m9 10 2 2 4-4"/></svg>
+                My RSVPs
+              </h3>
+              <span class="rsvp-badge" id="rsvp-count-badge">0</span>
+            </div>
+            <div class="rsvp-list" id="rsvp-list-root">
+              <div class="rsvp-empty">
+                Sign in and register for opportunities to populate your personal RSVP tracker dashboard.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <script>
-        // Global Endpoint Base Reference pointing to your active AWS Function URL
-        const API_BASE_URL = 'https://ewiqs2knjjgvxpbyamzpazx43q0ecjof.lambda-url.ap-southeast-2.on.aws';
+    <!-- 2. HOST / SOCIETY VIEW -->
+    <div id="view-host-dashboard" class="view-container">
+      
+      <div class="section-header">
+        <h1 class="section-title">Society Host Portal</h1>
+        <p class="section-subtitle">Manage your society's opportunities, track student RSVPs, and declare event victors.</p>
+      </div>
 
-        // Native API Client Wrapper implementation
-        const apiHelper = {
-            async get(endpoint) {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`);
-                if (!response.ok) throw new Error(`Fetch execution failed for: ${endpoint}`);
-                return await response.json();
-            },
-            async post(endpoint, data) {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if (!response.ok) throw new Error(`Post action rejected for: ${endpoint}`);
-                return await response.json();
-            }
-        };
+      <!-- Main Layout for Host -->
+      <div class="society-host-layout">
+        
+        <!-- Left Side: Events Lists -->
+        <div class="host-main-panel">
+          
+          <!-- State Tabs: Past, Ongoing, Future -->
+          <div class="host-tabs-navigation">
+            <button class="host-tab-nav-btn active" onclick="switchHostTab('ongoing')" id="host-tab-ongoing">Ongoing Events</button>
+            <button class="host-tab-nav-btn" onclick="switchHostTab('future')" id="host-tab-future">Future / Drafts</button>
+            <button class="host-tab-nav-btn" onclick="switchHostTab('past')" id="host-tab-past">Past Event Archives</button>
+          </div>
 
-        // Window Event Overlays manager interface implementation
-        const eventModal = {
-            element: document.getElementById('event-modal'),
-            async open(eventId) {
-                document.getElementById('modal-event-id').value = eventId;
-                this.element.style.display = 'flex';
-                
-                // Clear state indicators out
-                document.getElementById('modal-stats').innerText = 'Fetching current registration count...';
-                document.getElementById('modal-attendees-list').innerHTML = '<li>Loading registry...</li>';
+          <!-- Tab Content: Ongoing -->
+          <div id="host-list-ongoing" class="host-events-tab-content" style="display: block;">
+            <div class="host-events-grid" id="host-ongoing-grid-root">
+              <!-- Instantiated via JavaScript -->
+            </div>
+          </div>
 
-                try {
-                    // Pull real-time details from backend endpoint dependencies
-                    const [eventData, statsData, attendeesData] = await Promise.all([
-                        apiHelper.get(`/event/${eventId}`),
-                        apiHelper.get(`/stats/${eventId}`),
-                        apiHelper.get(`/attendees/${eventId}`)
-                    ]);
+          <!-- Tab Content: Future -->
+          <div id="host-list-future" class="host-events-tab-content" style="display: none;">
+            <div class="host-events-grid" id="host-future-grid-root">
+              <!-- Instantiated via JavaScript -->
+            </div>
+          </div>
 
-                    // Set header focus text
-                    document.getElementById('modal-title').innerText = eventData.title || 'Register for Event';
-                    
-                    // Render totals field metrics counter
-                    document.getElementById('modal-stats').innerText = `🔥 Total registrations: ${statsData.count || 0}`;
+          <!-- Tab Content: Past -->
+          <div id="host-list-past" class="host-events-tab-content" style="display: none;">
+            <div class="host-events-grid" id="host-past-grid-root">
+              <!-- Instantiated via JavaScript -->
+            </div>
+          </div>
 
-                    // Populate attendees list item array strings
-                    const attendeesList = document.getElementById('modal-attendees-list');
-                    attendeesList.innerHTML = '';
-                    if (attendeesData && attendeesData.length > 0) {
-                        attendeesData.forEach(name => {
-                            const li = document.createElement('li');
-                            li.innerText = `✔️ ${name}`;
-                            attendeesList.appendChild(li);
-                        });
-                    } else {
-                        attendeesList.innerHTML = '<li>Be the first to secure a spot for this session!</li>';
-                    }
+        </div>
 
-                } catch (err) {
-                    console.error("Modal compilation fault:", err);
-                    document.getElementById('modal-stats').innerText = 'Error loading metadata indicators.';
-                }
-            },
-            close() {
-                this.element.style.display = 'none';
-                document.getElementById('rsvp-form').reset();
-            }
-        };
+        <!-- Right Side: Creation / Upload Opportunity Form -->
+        <div class="host-sidebar-form">
+          <div class="student-rsvp-sidebar" style="border-radius: var(--radius-md);">
+            <h3 class="rsvp-title" style="margin-bottom: 0.5rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+              Launch New Event
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">Submit this form to instantly publish an opportunity for IGDTUW students.</p>
 
-        // Initialize runtime platform bindings on load lifecycle point
-        document.addEventListener('DOMContentLoaded', async () => {
-            const grid = document.getElementById('events-grid');
-            try {
-                const events = await apiHelper.get('/events');
-                grid.innerHTML = ''; // Wipe out loading message indicators cleanly
+            <form id="create-event-form" onsubmit="handleCreateEvent(event)">
+              <div class="form-group">
+                <label class="form-label" for="evt-title">Event Title <span style="color:#ef4444">*</span></label>
+                <input class="form-input" id="evt-title" type="text" placeholder="e.g. Innerve'26 Hackathon" required />
+              </div>
 
-                events.forEach(event => {
-                    const card = document.createElement('div');
-                    card.className = 'event-card';
-                    card.innerHTML = `
-                        <div class="event-content">
-                            <h3 class="event-title">${event.title}</h3>
-                            <p class="event-desc">${event.description}</p>
-                            <button class="btn" onclick="eventModal.open('${event.id}')">View Details & RSVP</button>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            } catch (err) {
-                console.error("Layout assignment crash:", err);
-                grid.innerHTML = `<div class="error">Failed to load platform events. Please verify backend configurations.</div>`;
-            }
-        });
+              <div class="form-group">
+                <label class="form-label" for="evt-society">Hosting Society Name <span style="color:#ef4444">*</span></label>
+                <select class="form-select" id="evt-society" required>
+                  <option value="" disabled selected>Select Society</option>
+                  <option value="ACM IGDTUW Student Chapter">ACM IGDTUW</option>
+                  <option value="IEEE IGDTUW Student Branch">IEEE IGDTUW</option>
+                  <option value="Lean In IGDTUW Circle">Lean In IGDTUW</option>
+                  <option value="Hypnotics Dance Society">Hypnotics Dance Society</option>
+                  <option value="Tarannum Music Society">Tarannum Music Society</option>
+                  <option value="Inception Art Society">Inception Creative Society</option>
+                  <option value="Bhavya Dramatics Society">Bhavya Dramatics Society</option>
+                </select>
+              </div>
 
-        // Setup RSVP Form submission logic router
-        document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('modal-event-id').value;
-            const namePayload = document.getElementById('rsvp-name').value;
-            const emailPayload = document.getElementById('rsvp-email').value;
+              <div class="form-group">
+                <label class="form-label" for="evt-category">Category <span style="color:#ef4444">*</span></label>
+                <select class="form-select" id="evt-category" required>
+                  <option value="Hackathon">Hackathon</option>
+                  <option value="Coding Trial">Coding Trial</option>
+                  <option value="Cultural Performance">Cultural Performance</option>
+                  <option value="Creative Contest">Creative Contest</option>
+                </select>
+              </div>
 
-            try {
-                await apiHelper.post('/rsvp', {
-                    eventId: parseInt(id),
-                    name: namePayload,
-                    email: emailPayload
-                });
-                
-                alert('🎉 Your spot is confirmed! See you at the session.');
-                eventModal.close();
-            } catch (err) {
-                alert('Submission failure. Please try again.');
-                console.error(err);
-            }
-        });
-    </script>
+              <div class="form-group">
+                <label class="form-label" for="evt-timeline">Timeline / Duration <span style="color:#ef4444">*</span></label>
+                <input class="form-input" id="evt-timeline" type="text" placeholder="e.g. 36 Hours, Oct 12 - Oct 14" required />
+              </div>
+
+              <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-group">
+                  <label class="form-label" for="evt-dates">Key End Date <span style="color:#ef4444">*</span></label>
+                  <input class="form-input" id="evt-dates" type="text" placeholder="Oct 10, 2026" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="evt-prizes">Prizes Details <span style="color:#ef4444">*</span></label>
+                  <input class="form-input" id="evt-prizes" type="text" placeholder="e.g. ₹50,000" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="evt-email">Primary Contact Email <span style="color:#ef4444">*</span></label>
+                <input class="form-input" id="evt-email" type="email" placeholder="e.g. contact@igdtuw.ac.in" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="evt-about">Event Description / About <span style="color:#ef4444">*</span></label>
+                <textarea class="form-input" id="evt-about" rows="3" style="resize: none;" placeholder="Provide brief guidelines, tracks, and descriptions..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <div class="toggle-switch-container">
+                  <div>
+                    <span class="form-label" style="margin-bottom: 0;">Restrict to @igdtuw.ac.in</span>
+                    <p class="toggle-label-desc">Requires students to have verified institutional domain email</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="evt-restrict" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <button class="form-button" type="submit">Publish Live Opportunity</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 3. AUTHENTICATION VIEW -->
+    <div id="view-auth-page" class="view-container">
+      
+      <div class="auth-container">
+        <div class="auth-toggle-tabs">
+          <button class="auth-toggle-tab active" onclick="toggleAuthForm('student')" id="auth-tab-student">Student Sign-Up</button>
+          <button class="auth-toggle-tab" onclick="toggleAuthForm('host')" id="auth-tab-host">Society Host Sign-Up</button>
+        </div>
+
+        <div class="auth-form-container">
+          
+          <!-- Student Sign-Up form -->
+          <form id="student-signup-form" onsubmit="handleStudentSignup(event)" style="display: block;">
+            <div style="margin-bottom: 1.5rem; text-align: center;">
+              <h2 style="font-size: 1.25rem; font-weight: 700;">Student Portal Access</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Unlock opportunities, register, and trace progress easily.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="stud-name">Full Name <span style="color:#ef4444">*</span></label>
+              <input class="form-input" id="stud-name" type="text" placeholder="e.g. Divya Sharma" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="stud-email">College Email Address <span style="color:#ef4444">*</span></label>
+              <input class="form-input" id="stud-email" type="email" placeholder="e.g. divya@igdtuw.ac.in" required />
+              <p class="form-helper">Use your @igdtuw.ac.in email address to unlock restricted on-campus matches.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="stud-college">College Name <span style="color:#ef4444">*</span></label>
+              <input class="form-input" id="stud-college" type="text" value="Indira Gandhi Delhi Technical University for Women" readonly />
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label class="form-label" for="stud-branch">Branch <span style="color:#ef4444">*</span></label>
+                <select class="form-select" id="stud-branch" required>
+                  <option value="CSE">CSE</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="MAE">MAE</option>
+                  <option value="DMAM">DMAM</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="stud-year">Graduation Year <span style="color:#ef4444">*</span></label>
+                <select class="form-select" id="stud-year" required>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="form-button" type="submit">Verify Email & Access Dashboard</button>
+          </form>
+
+          <!-- Host Sign-Up form -->
+          <form id="host-signup-form" onsubmit="handleHostSignup(event)" style="display: none;">
+            <div style="margin-bottom: 1.5rem; text-align: center;">
+              <h2 style="font-size: 1.25rem; font-weight: 700;">Society Host Access</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Establish your society profile and publish events.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="host-name">Organizer Name <span style="color:#ef4444">*</span></label>
+              <input class="form-input" id="host-name" type="text" placeholder="e.g. Secretary, ACM IGDTUW" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="host-society">Society Name <span style="color:#ef4444">*</span></label>
+              <select class="form-select" id="host-society" required>
+                <option value="ACM IGDTUW Student Chapter">ACM IGDTUW Student Chapter</option>
+                <option value="IEEE IGDTUW Student Branch">IEEE IGDTUW Student Branch</option>
+                <option value="Lean In IGDTUW Circle">Lean In IGDTUW Circle</option>
+                <option value="Hypnotics Dance Society">Hypnotics Dance Society</option>
+                <option value="Tarannum Music Society">Tarannum Music Society</option>
+                <option value="Inception Art Society">Inception Creative Society</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="host-email">Host Official IGDTUW Email <span style="color:#ef4444">*</span></label>
+              <input class="form-input" id="host-email" type="email" placeholder="e.g. acm.igdtuw@igdtuw.ac.in" required />
+              <p class="form-helper">Requires a strict <b>@igdtuw.ac.in</b> institutional address for hosting privileges.</p>
+            </div>
+
+            <button class="form-button" type="submit">Validate Domain & Host Portal</button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive Detail Modal -->
+  <div class="modal-overlay" id="detail-modal" onclick="closeDetailModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-header-pattern"></div>
+        <div class="modal-header-top">
+          <span class="category-badge" id="modal-category">Hackathon</span>
+          <button class="modal-close-btn" onclick="hideDetailModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <h2 class="modal-title" id="modal-title">National Hackathon Innerve'26</h2>
+        <div class="modal-society-badge" id="modal-society">ACM IGDTUW Student Chapter</div>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" onclick="switchModalTab('about')" id="modal-tab-about">About & Timeline</button>
+        <button class="modal-tab-btn" onclick="switchModalTab('dates')" id="modal-tab-dates">Dates & Prizes</button>
+        <button class="modal-tab-btn" onclick="switchModalTab('contact')" id="modal-tab-contact">Organizer Contact</button>
+      </div>
+
+      <div class="modal-content-scroll">
+        <!-- Tab: About -->
+        <div id="modal-content-about" class="modal-tab-content active">
+          <div class="detail-grid">
+            <div>
+              <h4 class="detail-section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                Event Overview
+              </h4>
+              <p class="detail-text" id="modal-about-text">
+                This is a mock event description about the prestigious hackathon. It lasts for 36 hours and brings developers across domains together.
+              </p>
+            </div>
+            
+            <div class="meta-box-list">
+              <div class="meta-box-item">
+                <div class="meta-box-label">Duration</div>
+                <div class="meta-box-value" id="modal-duration">36 Hours</div>
+              </div>
+              <div class="meta-box-item">
+                <div class="meta-box-label">Eligibility Criteria</div>
+                <div class="meta-box-value" id="modal-eligibility-desc">Restrict to IGDTUW Email</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Dates & Prizes -->
+        <div id="modal-content-dates" class="modal-tab-content">
+          <div class="detail-grid">
+            <div>
+              <h4 class="detail-section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trophy"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"/><path d="M12 2a5 5 0 0 0-5 5v3c0 2.2 1.8 4 4 4h2c2.2 0 4-1.8 4-4V7a5 5 0 0 0-5-5z"/></svg>
+                Prizes & Perks
+              </h4>
+              <p class="detail-text" id="modal-prizes-text">First Prize: INR 50,000 + Custom Swag bags and certificate of excellence from society mentors.</p>
+            </div>
+
+            <div class="meta-box-list">
+              <div class="meta-box-item">
+                <div class="meta-box-label">Registration Deadline</div>
+                <div class="meta-box-value" id="modal-deadline">Oct 10, 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Contact -->
+        <div id="modal-content-contact" class="modal-tab-content">
+          <h4 class="detail-section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Connect with Organizers
+          </h4>
+          <p class="detail-text">For clarifications, sponsorship inquiries, or technical queries, please reach out via the official channel:</p>
+          <div class="meta-box-item" style="max-width: 320px;">
+            <div class="meta-box-label">Official Email Contact</div>
+            <div class="meta-box-value" id="modal-contact-email">acm@igdtuw.ac.in</div>
+          </div>
+        </div>
+
+        <!-- Live Eligibility Check Badge before actions -->
+        <div style="margin-top: 1.5rem;">
+          <div class="eligibility-check-banner eligible" id="modal-eligibility-banner">
+            <svg class="eligibility-banner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" id="eligibility-svg-check">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <div class="eligibility-banner-title" id="eligibility-banner-title">Eligible to RSVP</div>
+              <div class="eligibility-banner-desc" id="eligibility-banner-desc">You satisfy all criteria declared by the host society.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="nav-btn" style="border: 1px solid var(--border-color);" onclick="hideDetailModal()">Close Panel</button>
+        <button class="form-button" style="margin-top: 0; width: auto;" id="btn-modal-action" onclick="handleModalRegistration()">Confirm RSVP / Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo-container" style="color: white;">
+          <div class="logo-icon" style="background-color: var(--secondary);">I</div>
+          <div class="logo-text">
+            <span class="logo-title" style="color: white;">IGDTUW Opps</span>
+            <span class="logo-subtitle" style="color: var(--secondary);">Unified Student Hub</span>
+          </div>
+        </div>
+        <p class="footer-desc">An state-of-the-art academic and cultural event monitoring solution modeled specifically to boost women empowerment, computing trials, and student interaction inside IGDTUW campuses.</p>
+      </div>
+
+      <div class="footer-links-col">
+        <span class="footer-col-title">Primary Hubs</span>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link" onclick="switchView('student-dashboard'); return false;">Student Board</a></li>
+          <li><a href="#" class="footer-link" onclick="switchView('host-dashboard'); return false;">Society Host Station</a></li>
+          <li><a href="#" class="footer-link" onclick="switchView('auth-page'); return false;">Join Platform</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <span class="footer-col-title">Affiliated Chapters</span>
+        <ul class="footer-links">
+          <li><a href="https://www.igdtuw.ac.in" target="_blank" class="footer-link">IGDTUW Main Site</a></li>
+          <li><a href="#" class="footer-link" onclick="showToast('Connecting with ACM Admin...', 'success'); return false;">ACM Student Branch</a></li>
+          <li><a href="#" class="footer-link" onclick="showToast('Connecting with IEEE Admin...', 'success'); return false;">IEEE Women in Engineering</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; Team CloudTitans 2026.</p>
+    </div>
+  </footer>
+
+  <!-- Modular Interactive Script -->
+  <script src="app.js" defer></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
