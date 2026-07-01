@@ -1,0 +1,6 @@
+{
+  "name": "IGDTUW Opportunity and Event Tracking Platform",
+  "description": "A collegiate opportunity and event tracking platform tailored specifically for IGDTUW, featuring student and society dashboards, registration tracking, and event management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
