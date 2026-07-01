@@ -1,4 +1,5 @@
 // Global Application State Core
+const API_BASE_URL = "https://2uiqq2lk4timo5iipabsj5t6ma0eedth.lambda-url.us-east-1.on.aws";
 const state = {
   currentUser: null, // Holds logged-in user profile
   activeView: 'student-dashboard',
@@ -785,4 +786,16 @@ window.addEventListener('DOMContentLoaded', () => {
   renderAllOpportunities();
   renderRsvps();
   renderHostDashboard();
+});
+
+window.addEventListener('load', () => {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) {
+    setTimeout(() => {
+      loadingScreen.classList.add('fade-out');
+      setTimeout(() => {
+        loadingScreen.remove();
+      }, 600); 
+    }, 2000); 
+  }
 });
